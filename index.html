@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para ti ✨</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@200;300;400;500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      background: #ffeef8;
+      color: #2c1810;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Portada romántica y simple */
+    .cover-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: all 1s ease;
+      padding: 20px;
+    }
+
+    .cover-screen.hidden {
+      opacity: 0;
+      transform: translateY(-100%);
+      pointer-events: none;
+    }
+
+    .cover-content {
+      text-align: center;
+      animation: fadeInUp 1.2s ease-out;
+    }
+
+    .cover-title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #d63384;
+      text-shadow: 2px 2px 4px rgba(214, 51, 132, 0.2);
+    }
+
+    .cover-subtitle {
+      font-size: 1rem;
+      color: #8b5a6b;
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
+    .message-details {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(214, 51, 132, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .detail-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .label {
+      color: #8b5a6b;
+      font-weight: 300;
+    }
+
+    .value {
+      color: #d63384;
+      font-weight: 500;
+    }
+
+    .enter-btn {
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .enter-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+    }
+
+    /* Pantalla principal optimizada para móvil */
+    .main-screen {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffeef8 0%, #f8e8ff 100%);
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+
+    .main-screen.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Corazones flotantes suaves */
+    .floating-hearts {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .floating-heart {
+      position: absolute;
+      font-size: 1.5rem;
+      opacity: 0.3;
+      animation: heartFloat 6s infinite ease-in-out;
+      color: #ff8fab;
+    }
+
+    @keyframes heartFloat {
+      0%, 100% {
+        transform: translateY(0px);
+        opacity: 0.2;
+      }
+      50% {
+        transform: translateY(-15px);
+        opacity: 0.4;
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .content-card {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(15px);
+      border-radius: 25px;
+      padding: 2rem;
+      box-shadow: 0 15px 35px rgba(214, 51, 132, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      margin-bottom: 2rem;
+    }
+
+    #text-container {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #5a4037;
+      white-space: pre-wrap;
+      text-align: left;
+      min-height: 200px;
+      font-weight: 300;
+    }
+
+    .question-text {
+      color: #d63384;
+      font-weight: 400;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.2rem;
+      background: #ff8fab;
+      margin-left: 2px;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .btn-reveal {
+      width: 100%;
+      margin-top: 2rem;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(255, 107, 157, 0.3);
+      opacity: 0;
+      transform: translateY(20px);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .btn-reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .btn-reveal:active {
+      transform: translateY(2px);
+      box-shadow: 0 4px 15px rgba(255, 107, 157, 0.2);
+    }
+
+    .hidden-message {
+      margin-top: 1.5rem;
+      padding: 2rem;
+      background: rgba(255, 245, 251, 0.9);
+      border-radius: 20px;
+      display: none;
+      font-size: 1rem;
+      color: #5a4037;
+      box-shadow: 0 8px 25px rgba(214, 51, 132, 0.1);
+      text-align: center;
+      border: 1px solid rgba(255, 182, 193, 0.3);
+      font-family: 'Dancing Script', cursive;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .fade-in {
+      animation: revealMessage 1s ease forwards;
+    }
+
+    .celebration-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .celebration-heart {
+      position: absolute;
+      font-size: 2rem;
+      animation: celebrationFloat 3s ease-out forwards;
+      color: #ff8fab;
+    }
+
+    @keyframes revealMessage {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes celebrationFloat {
+      0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: translateY(-50px) rotate(180deg) scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-100px) rotate(360deg) scale(0.8);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Estilos específicos para móvil */
+    @media (max-width: 480px) {
+      .cover-title {
+        font-size: 2.2rem;
+      }
+      
+      .cover-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .message-details {
+        padding: 1.2rem;
+      }
+      
+      .content-card {
+        padding: 1.5rem;
+      }
+      
+      #text-container {
+        font-size: 1rem;
+        min-height: 180px;
+      }
+      
+      .container {
+        padding: 1.5rem 1rem;
+      }
+    }
+
+    /* Efectos suaves al tocar en móvil */
+    .enter-btn:hover,
+    .btn-reveal:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Loading dots para el typing */
+    .typing-dots {
+      display: inline-block;
+    }
+
+    .typing-dots span {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #ff8fab;
+      margin: 0 1px;
+      animation: typingDots 1.5s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typingDots {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.3;
+      }
+      30% {
+        transform: translateY(-8px);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Portada simple y bonita -->
+  <div class="cover-screen" id="coverScreen">
+    <div class="cover-content">
+      <h1 class="cover-title">Un mensaje especial</h1>
+      <p class="cover-subtitle">Hecho con cariño para ti</p>
+      
+      <div class="message-details">
+        <div class="detail-item">
+          <span class="label">De:</span>
+          <span class="value">Alan</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Para:</span>
+          <span class="value">Brendita</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Fecha:</span>
+          <span class="value">22 de julio</span>
+        </div>
+      </div>
+      <button class="enter-btn" onclick="enterExperience()">
+        Ver mensaje 💕
+      </button>
+    </div>
+  </div>
+
+  <!-- Pantalla principal optimizada -->
+  <div class="main-screen" id="mainScreen">
+    <div class="floating-hearts" id="floatingHearts"></div>
+    
+    <div class="container">
+      <div class="content-card">
+        <div id="text-container"></div>
+        <span class="typing-cursor" id="cursor"></span>
+        
+        <button class="btn-reveal" id="revealBtn" onclick="showMessage()">
+          Hay algo más que quiero decirte 💝
+        </button>
+
+        <div class="hidden-message" id="extraMessage">
+          Simplemente eres alguien que quiero en mi vida....Ojitos bellos,linda carita y preciosa voz. 💌
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Crear corazones flotantes suaves
+    function createFloatingHearts() {
+      const heartsContainer = document.getElementById('floatingHearts');
+      const heartEmojis = ['💕', '💖', '💗'];
+      
+      for (let i = 0; i < 6; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+        heart.style.left = Math.random() * 90 + 5 + '%';
+        heart.style.top = Math.random() * 80 + 10 + '%';
+        heart.style.animationDelay = Math.random() * 6 + 's';
+        heartsContainer.appendChild(heart);
+      }
+    }
+
+    // Función para entrar a la experiencia
+    function enterExperience() {
+      const coverScreen = document.getElementById('coverScreen');
+      const mainScreen = document.getElementById('mainScreen');
+      
+      coverScreen.classList.add('hidden');
+      
+      setTimeout(() => {
+        mainScreen.classList.add('show');
+        createFloatingHearts();
+        setTimeout(startTyping, 1000);
+      }, 500);
+    }
+
+    // Mensajes más personales
+    const paragraphs = [
+      "Hola Muy Buenas Noches Brendita... 😊",
+      "",
+      "A veces me pregunto qué hay detrás de tu hermosa mirada...",
+      "",
+      "¿Cuáles son tus sueños más profundos?",
+      "",
+      "¿Qué es lo que realmente te hace feliz?",
+      "",
+      "¿Cuáles son tus miedos?",
+      "",
+      "¿Qué te gusta hacer cuando estás sola y tranquila?",
+      "",
+      "¿Hay algo que siempre hayas querido hacer pero no te has atrevido?",
+      "",
+      "¿Cuál es ese lugar especial donde te sientes en paz?",
+      "",
+      "¿Qué es lo que no te gusta de mí?",
+      "",
+      "¿Cómo te gusta que sea un hombre contigo?",
+      "",
+      "Con todo respeto... solo quería decirte que me encantaría seguir conociéndote más y más cada día."
+    ];
+
+    let currentParagraph = 0;
+    let isTyping = false;
+
+    function startTyping() {
+      typeParagraph(paragraphs[currentParagraph]);
+    }
+
+    function typeParagraph(text, i = 0) {
+      isTyping = true;
+      const textContainer = document.getElementById("text-container");
+      
+      if (i < text.length) {
+        textContainer.innerHTML += text.charAt(i);
+        
+        // Colorear preguntas
+        if (text.includes('¿')) {
+          const content = textContainer.innerHTML;
+          const coloredContent = content.replace(/¿([^?]*)\?/g, '<span class="question-text">¿$1?</span>');
+          textContainer.innerHTML = coloredContent;
+        }
+        
+        setTimeout(() => typeParagraph(text, i + 1), 50);
+      } else {
+        textContainer.innerHTML += "\n";
+        currentParagraph++;
+        
+        if (currentParagraph < paragraphs.length) {
+          setTimeout(() => typeParagraph(paragraphs[currentParagraph]), 800);
+        } else {
+          isTyping = false;
+          document.getElementById('cursor').style.display = 'none';
+          setTimeout(() => {
+            document.getElementById('revealBtn').classList.add('show');
+          }, 1000);
+        }
+      }
+    }
+
+    function showMessage() {
+      const message = document.getElementById("extraMessage");
+      const btn = document.getElementById("revealBtn");
+      
+      message.style.display = "block";
+      message.classList.add("fade-in");
+      btn.style.opacity = "0.5";
+      btn.innerHTML = "¡Mensaje revelado! ✨";
+      
+      // Crear celebración de corazones
+      createCelebrationHearts();
+    }
+
+    function createCelebrationHearts() {
+      const celebration = document.createElement('div');
+      celebration.className = 'celebration-hearts';
+      document.body.appendChild(celebration);
+      
+      const heartEmojis = ['💕', '💖', '💗', '💓', '💝'];
+      
+      for (let i = 0; i < 12; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'celebration-heart';
+          heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+          heart.style.left = Math.random() * 100 + '%';
+          heart.style.top = '100%';
+          celebration.appendChild(heart);
+          
+          setTimeout(() => heart.remove(), 3000);
+        }, i * 200);
+      }
+      
+      setTimeout(() => celebration.remove(), 4000);
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('mainScreen').style.display = 'block';
+    });
+
+    // Prevenir zoom en doble tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+      var now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+  </script>
+</body>
+</html>
